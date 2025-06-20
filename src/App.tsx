@@ -30,7 +30,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
-export default function HospitalManagementSystem() {
+function App() {
   const [activeSection, setActiveSection] = useState("general")
   const [selectedModule, setSelectedModule] = useState("admin")
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -351,6 +351,10 @@ export default function HospitalManagementSystem() {
     {
       name: "Management Summary",
       permissions: [{ name: "Staff Management Summary", checked: false }],
+    },
+    {
+      name: "MAR Configuration",
+      permissions: [{ name: "MAR Configuration", checked: false }],
     },
     {
       name: "MAR Configuration",
@@ -927,3 +931,5 @@ export default function HospitalManagementSystem() {
     </div>
   )
 }
+
+export default App

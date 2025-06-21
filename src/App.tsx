@@ -427,373 +427,353 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="min-h-screen bg-gray-50">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Header - Improved mobile layout */}
-      <div className="fixed top-0 left-0 right-0 h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-3 sm:px-4 lg:px-6 z-30">
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden h-8 w-8 sm:h-10 sm:w-10"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            {sidebarOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
+      {/* Header - Using flexbox with proper responsive spacing */}
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-white px-4 sm:h-16 sm:px-6">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(!sidebarOpen)}>
+            {sidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </Button>
-          <div className="flex items-center space-x-1 sm:space-x-2">
-            <Activity className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-blue-600" />
-            <span className="text-base sm:text-lg lg:text-xl font-bold text-blue-600">Therap</span>
+
+          <div className="flex items-center gap-2">
+            <Activity className="h-6 w-6 text-blue-600 sm:h-8 sm:w-8" />
+            <span className="text-lg font-bold text-blue-600 sm:text-xl">Therap</span>
           </div>
-          <div className="hidden md:block text-xs sm:text-sm text-gray-600">Dashboard | Quick Links</div>
+
+          <div className="hidden text-sm text-gray-600 md:block">Dashboard | Quick Links</div>
         </div>
-        <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
-          <Button variant="ghost" size="icon" className="relative h-8 w-8 sm:h-10 sm:w-10">
-            <Bell className="h-3 w-3 sm:h-4 sm:w-4" />
-            <Badge className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 rounded-full p-0 text-xs">3</Badge>
+
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-4 w-4" />
+            <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs">3</Badge>
           </Button>
-          <div className="hidden lg:flex items-center space-x-4">
-            <span className="text-xs xl:text-sm text-gray-600">Starline Community Services</span>
-            <span className="text-xs xl:text-sm text-gray-600">Richard Gichuki, Operations Manager</span>
+
+          <div className="hidden items-center gap-4 lg:flex">
+            <span className="text-sm text-gray-600">Starline Community Services</span>
+            <span className="text-sm text-gray-600">Richard Gichuki, Operations Manager</span>
           </div>
-          <Button variant="outline" size="sm" className="text-xs sm:text-sm px-2 sm:px-3">
+
+          <Button variant="outline" size="sm">
             Logout
           </Button>
         </div>
-      </div>
+      </header>
 
-      {/* Sidebar - Improved mobile behavior */}
-      <div
-        className={`fixed left-0 top-14 sm:top-16 bottom-0 w-64 sm:w-72 lg:w-80 bg-white border-r border-gray-200 overflow-y-auto z-40 transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
-      >
-        <div className="p-3 sm:p-4">
-          <div className="space-y-2 mb-4 sm:mb-6">
-            <div className="text-xs sm:text-sm text-gray-600">
-              <span className="font-medium">Program:</span> No Program Selected
+      <div className="flex">
+        {/* Sidebar - Using fixed positioning with proper responsive widths */}
+        <aside
+          className={`fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)] w-64 transform border-r bg-white transition-transform duration-300 ease-in-out sm:top-16 sm:h-[calc(100vh-4rem)] sm:w-72 lg:translate-x-0 lg:w-80 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex h-full flex-col overflow-y-auto p-4">
+            <div className="mb-6 space-y-2">
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Program:</span> No Program Selected
+              </div>
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Profile:</span> Initial
+              </div>
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Module:</span> Search
+              </div>
             </div>
-            <div className="text-xs sm:text-sm text-gray-600">
-              <span className="font-medium">Profile:</span> Initial
-            </div>
-            <div className="text-xs sm:text-sm text-gray-600">
-              <span className="font-medium">Module:</span> Search
-            </div>
+
+            <nav className="flex-1 space-y-1">
+              {sidebarItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setSelectedModule(item.id)
+                    setSidebarOpen(false)
+                  }}
+                  className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                    selectedModule === item.id ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <item.icon className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                  {item.count && (
+                    <Badge variant="secondary" className="ml-2 flex-shrink-0">
+                      {item.count}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </nav>
           </div>
+        </aside>
 
-          <nav className="space-y-1">
-            {sidebarItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setSelectedModule(item.id)
-                  setSidebarOpen(false)
-                }}
-                className={`w-full flex items-center justify-between px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${
-                  selectedModule === item.id ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <div className="flex items-center min-w-0">
-                  <item.icon className="mr-2 sm:mr-3 h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                  <span className="truncate">{item.label}</span>
-                </div>
-                {item.count && (
-                  <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
-                    {item.count}
-                  </Badge>
-                )}
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
+        {/* Main Content - Using CSS Grid for layout */}
+        <main className="flex-1 lg:ml-80">
+          <div className="grid min-h-[calc(100vh-3.5rem)] grid-cols-1 sm:min-h-[calc(100vh-4rem)] lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_24rem]">
+            {/* Content Area */}
+            <div className="overflow-y-auto p-4 sm:p-6">
+              <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
+                <TabsList className="grid h-auto w-full grid-cols-2 lg:grid-cols-4">
+                  <TabsTrigger value="general" className="px-2 py-2 text-xs sm:px-4 sm:text-sm">
+                    General
+                  </TabsTrigger>
+                  <TabsTrigger value="care" className="px-2 py-2 text-xs sm:px-4 sm:text-sm">
+                    Care
+                  </TabsTrigger>
+                  <TabsTrigger value="permissions" className="px-2 py-2 text-xs sm:px-4 sm:text-sm">
+                    Permissions
+                  </TabsTrigger>
+                  <TabsTrigger value="staff" className="px-2 py-2 text-xs sm:px-4 sm:text-sm">
+                    Staff Roles
+                  </TabsTrigger>
+                </TabsList>
 
-      {/* Main Content - Better mobile spacing */}
-      <div className="flex-1 lg:ml-80 mt-14 sm:mt-16 overflow-hidden">
-        <div className="flex flex-col lg:flex-row h-full">
-          {/* Content Area - Improved mobile padding */}
-          <div className="flex-1 p-3 sm:p-4 lg:p-6 overflow-y-auto">
-            <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-4 sm:mb-6 h-auto">
-                <TabsTrigger value="general" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                  General
-                </TabsTrigger>
-                <TabsTrigger value="care" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                  Care
-                </TabsTrigger>
-                <TabsTrigger value="permissions" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                  Permissions
-                </TabsTrigger>
-                <TabsTrigger value="staff" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                  Staff Roles
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="general" className="mt-4 sm:mt-6">
-                <Card>
-                  <CardHeader className="pb-3 sm:pb-4">
-                    <div className="flex flex-col space-y-3 sm:space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
-                      <CardTitle className="text-center lg:text-left text-lg sm:text-xl text-blue-600">
-                        General Administration
-                      </CardTitle>
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <Button size="sm" className="text-xs sm:text-sm">
-                          <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                          Add New
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-xs sm:text-sm">
-                          <Upload className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                          Import
-                        </Button>
+                <TabsContent value="general" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <CardTitle className="text-xl text-blue-600">General Administration</CardTitle>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <Button size="sm">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add New
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Upload className="mr-2 h-4 w-4" />
+                            Import
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 sm:space-y-4">
-                      {generalAdminItems.map((item, index) => (
-                        <div
-                          key={index}
-                          className="border border-gray-100 rounded-lg p-3 sm:p-4 hover:shadow-sm transition-shadow"
-                        >
-                          <div className="flex flex-col space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mb-2">
-                                <h3 className="font-medium text-gray-900 text-sm sm:text-base">{item.name}</h3>
-                                <Badge variant="outline" className="text-xs w-fit">
-                                  {item.actions.length} actions
-                                </Badge>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4">
+                        {generalAdminItems.map((item, index) => (
+                          <div key={index} className="rounded-lg border p-4 transition-shadow hover:shadow-sm">
+                            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                              <div className="min-w-0 flex-1">
+                                <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+                                  <h3 className="font-medium text-gray-900">{item.name}</h3>
+                                  <Badge variant="outline" className="w-fit">
+                                    {item.actions.length} actions
+                                  </Badge>
+                                </div>
+                                <p className="mb-2 text-sm text-gray-600">{item.description}</p>
+                                <p className="text-xs text-gray-500">Last updated: {item.lastUpdated}</p>
                               </div>
-                              <p className="text-xs sm:text-sm text-gray-600 mb-2">{item.description}</p>
-                              <p className="text-xs text-gray-500">Last updated: {item.lastUpdated}</p>
+                              <div className="flex flex-wrap gap-2">
+                                {item.actions.map((action, actionIndex) => (
+                                  <Button
+                                    key={actionIndex}
+                                    variant="link"
+                                    size="sm"
+                                    className="h-auto p-1 text-xs text-blue-600"
+                                  >
+                                    {action}
+                                  </Button>
+                                ))}
+                              </div>
                             </div>
-                            <div className="flex flex-wrap gap-1 sm:gap-2">
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="care" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <CardTitle className="text-xl text-blue-600">Care Management</CardTitle>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <Button size="sm">
+                            <Plus className="mr-2 h-4 w-4" />
+                            New Entry
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Filter className="mr-2 h-4 w-4" />
+                            Filter
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+                        {careModules.map((item, index) => (
+                          <div key={index} className="rounded-lg border p-4 transition-shadow hover:shadow-sm">
+                            <div className="mb-3 flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="mb-2 flex items-center gap-2">
+                                  <h3 className="font-medium text-gray-900">{item.name}</h3>
+                                  <Badge className={getPriorityColor(item.priority)}>{item.priority}</Badge>
+                                </div>
+                                <p className="mb-2 text-sm text-gray-600">{item.description}</p>
+                                <div className="text-xs text-gray-500">
+                                  <span>{item.count} records</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
                               {item.actions.map((action, actionIndex) => (
                                 <Button
                                   key={actionIndex}
                                   variant="link"
                                   size="sm"
-                                  className="text-blue-600 p-1 h-auto text-xs"
+                                  className="h-auto p-1 text-xs text-blue-600"
                                 >
                                   {action}
                                 </Button>
                               ))}
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="care" className="mt-6">
-                <Card>
-                  <CardHeader className="pb-4">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                      <CardTitle className="text-center lg:text-left text-xl text-blue-600">Care Management</CardTitle>
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <Button size="sm" className="text-xs">
-                          <Plus className="h-4 w-4 mr-2" />
-                          New Entry
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-xs">
-                          <Filter className="h-4 w-4 mr-2" />
-                          Filter
-                        </Button>
+                        ))}
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                      {careModules.map((item, index) => (
-                        <div
-                          key={index}
-                          className="border border-gray-100 rounded-lg p-4 hover:shadow-sm transition-shadow"
-                        >
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-2 mb-2">
-                                <h3 className="font-medium text-gray-900">{item.name}</h3>
-                                <Badge className={getPriorityColor(item.priority)}>{item.priority}</Badge>
-                              </div>
-                              <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                              <div className="flex items-center space-x-4 text-xs text-gray-500">
-                                <span>{item.count} records</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {item.actions.map((action, actionIndex) => (
-                              <Button
-                                key={actionIndex}
-                                variant="link"
-                                size="sm"
-                                className="text-blue-600 p-1 h-auto text-xs"
-                              >
-                                {action}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-              <TabsContent value="permissions" className="mt-6">
-                <Card>
-                  <CardHeader className="pb-4">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                      <CardTitle>User Permissions Configuration</CardTitle>
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <Button size="sm" className="text-xs">
-                          Save Changes
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-xs">
-                          Reset to Default
-                        </Button>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                      {permissionModules.map((module, index) => (
-                        <div key={index} className="bg-blue-50 p-4 rounded-lg">
-                          <h3 className="font-semibold text-blue-700 mb-3">{module.name}</h3>
-                          <div className="space-y-3">
-                            {module.permissions.map((permission, permIndex) => (
-                              <div key={permIndex} className="flex items-center space-x-2">
-                                <Checkbox id={`${index}-${permIndex}`} defaultChecked={permission.checked} />
-                                <label
-                                  htmlFor={`${index}-${permIndex}`}
-                                  className="text-sm text-gray-700 cursor-pointer"
-                                >
-                                  {permission.name}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="staff" className="mt-4 sm:mt-6">
-                <Card>
-                  <CardHeader className="pb-3 sm:pb-4 px-3 sm:px-6">
-                    <div className="flex flex-col space-y-3 sm:space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
-                      <CardTitle className="text-lg sm:text-xl">Staff Roles & Management</CardTitle>
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            placeholder="Search roles..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full sm:w-48 text-xs sm:text-sm h-8 sm:h-10"
-                          />
-                          <Button variant="outline" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
-                            <Search className="h-3 w-3 sm:h-4 sm:w-4" />
+                <TabsContent value="permissions" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <CardTitle>User Permissions Configuration</CardTitle>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <Button size="sm">Save Changes</Button>
+                          <Button variant="outline" size="sm">
+                            Reset to Default
                           </Button>
                         </div>
-                        <Select defaultValue="15">
-                          <SelectTrigger className="w-full sm:w-32 h-8 sm:h-10 text-xs sm:text-sm">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="15">15</SelectItem>
-                            <SelectItem value="25">25</SelectItem>
-                            <SelectItem value="50">50</SelectItem>
-                          </SelectContent>
-                        </Select>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="px-3 sm:px-6">
-                    <div className="overflow-x-auto -mx-3 sm:mx-0">
-                      <div className="min-w-full inline-block align-middle">
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                        {permissionModules.map((module, index) => (
+                          <div key={index} className="rounded-lg bg-blue-50 p-4">
+                            <h3 className="mb-3 font-semibold text-blue-700">{module.name}</h3>
+                            <div className="space-y-3">
+                              {module.permissions.map((permission, permIndex) => (
+                                <div key={permIndex} className="flex items-center gap-2">
+                                  <Checkbox id={`${index}-${permIndex}`} defaultChecked={permission.checked} />
+                                  <label
+                                    htmlFor={`${index}-${permIndex}`}
+                                    className="cursor-pointer text-sm text-gray-700"
+                                  >
+                                    {permission.name}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="staff" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <CardTitle>Staff Roles & Management</CardTitle>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <div className="flex items-center gap-2">
+                            <Input
+                              placeholder="Search roles..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="w-full sm:w-48"
+                            />
+                            <Button variant="outline" size="icon">
+                              <Search className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <Select defaultValue="15">
+                            <SelectTrigger className="w-full sm:w-32">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="15">15</SelectItem>
+                              <SelectItem value="25">25</SelectItem>
+                              <SelectItem value="50">50</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="overflow-x-auto">
                         <Table>
                           <TableHeader>
                             <TableRow>
-                              <TableHead className="min-w-[200px] text-xs sm:text-sm">Position Title</TableHead>
-                              <TableHead className="min-w-[150px] hidden md:table-cell text-xs sm:text-sm">
-                                Department
-                              </TableHead>
-                              <TableHead className="min-w-[100px] hidden lg:table-cell text-xs sm:text-sm">
-                                Employees
-                              </TableHead>
-                              <TableHead className="min-w-[120px] hidden xl:table-cell text-xs sm:text-sm">
-                                Salary Range
-                              </TableHead>
-                              <TableHead className="min-w-[80px] text-xs sm:text-sm">Status</TableHead>
-                              <TableHead className="min-w-[120px] text-xs sm:text-sm">Actions</TableHead>
+                              <TableHead className="min-w-[200px]">Position Title</TableHead>
+                              <TableHead className="hidden md:table-cell">Department</TableHead>
+                              <TableHead className="hidden lg:table-cell">Employees</TableHead>
+                              <TableHead className="hidden xl:table-cell">Salary Range</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Actions</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {filteredStaffRoles.map((role) => (
                               <TableRow key={role.id}>
-                                <TableCell className="py-3">
+                                <TableCell>
                                   <div>
-                                    <div className="font-medium text-xs sm:text-sm">{role.title}</div>
-                                    <div className="text-xs text-gray-500 md:hidden mt-1">{role.department}</div>
-                                    <div className="text-xs text-gray-400 mt-1 max-w-xs line-clamp-2">
+                                    <div className="font-medium">{role.title}</div>
+                                    <div className="text-sm text-gray-500 md:hidden">{role.department}</div>
+                                    <div className="mt-1 max-w-xs text-xs text-gray-400 line-clamp-2">
                                       {role.description}
                                     </div>
                                   </div>
                                 </TableCell>
-                                <TableCell className="hidden md:table-cell text-xs sm:text-sm">
-                                  {role.department}
-                                </TableCell>
+                                <TableCell className="hidden md:table-cell">{role.department}</TableCell>
                                 <TableCell className="hidden lg:table-cell">
-                                  <Badge variant="outline" className="text-xs">
-                                    {role.employeeCount}
-                                  </Badge>
+                                  <Badge variant="outline">{role.employeeCount}</Badge>
                                 </TableCell>
-                                <TableCell className="hidden xl:table-cell text-xs">{role.salary}</TableCell>
+                                <TableCell className="hidden xl:table-cell text-sm">{role.salary}</TableCell>
                                 <TableCell>
-                                  <Badge className={`${getStatusColor(role.status)} text-xs`}>{role.status}</Badge>
+                                  <Badge className={getStatusColor(role.status)}>{role.status}</Badge>
                                 </TableCell>
                                 <TableCell>
-                                  <div className="flex space-x-1">
+                                  <div className="flex gap-1">
                                     <Dialog>
                                       <DialogTrigger asChild>
-                                        <Button variant="outline" size="icon" className="h-7 w-7 sm:h-8 sm:w-8">
+                                        <Button variant="outline" size="icon" className="h-8 w-8">
                                           <Eye className="h-3 w-3" />
                                         </Button>
                                       </DialogTrigger>
-                                      <DialogContent className="max-w-sm sm:max-w-md mx-4">
+                                      <DialogContent className="max-w-md">
                                         <DialogHeader>
-                                          <DialogTitle className="text-sm sm:text-base">{role.title}</DialogTitle>
+                                          <DialogTitle>{role.title}</DialogTitle>
                                         </DialogHeader>
-                                        <div className="space-y-3 sm:space-y-4">
+                                        <div className="space-y-4">
                                           <div>
-                                            <h4 className="font-medium text-sm">Department</h4>
-                                            <p className="text-xs sm:text-sm text-gray-600">{role.department}</p>
+                                            <h4 className="font-medium">Department</h4>
+                                            <p className="text-sm text-gray-600">{role.department}</p>
                                           </div>
                                           <div>
-                                            <h4 className="font-medium text-sm">Description</h4>
-                                            <p className="text-xs sm:text-sm text-gray-600">{role.description}</p>
+                                            <h4 className="font-medium">Description</h4>
+                                            <p className="text-sm text-gray-600">{role.description}</p>
                                           </div>
                                           <div>
-                                            <h4 className="font-medium text-sm">Current Employees</h4>
-                                            <p className="text-xs sm:text-sm text-gray-600">{role.employeeCount}</p>
+                                            <h4 className="font-medium">Current Employees</h4>
+                                            <p className="text-sm text-gray-600">{role.employeeCount}</p>
                                           </div>
                                           <div>
-                                            <h4 className="font-medium text-sm">Salary Range</h4>
-                                            <p className="text-xs sm:text-sm text-gray-600">{role.salary}</p>
+                                            <h4 className="font-medium">Salary Range</h4>
+                                            <p className="text-sm text-gray-600">{role.salary}</p>
                                           </div>
                                         </div>
                                       </DialogContent>
                                     </Dialog>
-                                    <Button variant="outline" size="icon" className="h-7 w-7 sm:h-8 sm:w-8">
+                                    <Button variant="outline" size="icon" className="h-8 w-8">
                                       <Edit className="h-3 w-3" />
                                     </Button>
-                                    <Button variant="outline" size="icon" className="h-7 w-7 sm:h-8 sm:w-8">
+                                    <Button variant="outline" size="icon" className="h-8 w-8">
                                       <Trash2 className="h-3 w-3" />
                                     </Button>
                                   </div>
@@ -803,149 +783,151 @@ function App() {
                           </TableBody>
                         </Table>
                       </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row items-center justify-between mt-4 space-y-2 sm:space-y-0">
-                      <p className="text-xs sm:text-sm text-gray-600">
-                        Showing {filteredStaffRoles.length} of {staffRoles.length} roles
-                      </p>
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" disabled className="text-xs h-8">
-                          Previous
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-xs h-8">
-                          Next
-                        </Button>
+                      <div className="mt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
+                        <p className="text-sm text-gray-600">
+                          Showing {filteredStaffRoles.length} of {staffRoles.length} roles
+                        </p>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" disabled>
+                            Previous
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            Next
+                          </Button>
+                        </div>
                       </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            {/* Right Sidebar - Using CSS Grid for responsive layout */}
+            <div className="border-t bg-gray-50 p-4 lg:border-l lg:border-t-0 lg:bg-white lg:p-6">
+              <div className="grid gap-4">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between rounded bg-blue-600 p-2 text-sm text-white">
+                      Issue Tracking
+                      <Badge className="bg-white text-blue-600">5</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      New Issue
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      My Issues (3)
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Urgent Issues (2)
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between rounded bg-blue-600 p-2 text-sm text-white">
+                      SComm
+                      <Badge className="bg-white text-blue-600">12</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Inbox (8)
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Sent Items
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Compose
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Drafts (2)
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Custom User Group
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Message Audit
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="rounded bg-blue-600 p-2 text-sm text-white">Appointments</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Today (3)
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Weekly (14)
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Monthly (45)
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="rounded bg-blue-600 p-2 text-sm text-white">Schedule</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      View Schedule
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Print Schedule
+                    </Button>
+                    <Button variant="link" className="h-auto justify-start p-0 text-sm text-blue-600">
+                      Search
+                    </Button>
+                    <div className="mt-4 rounded bg-yellow-400 py-3 px-4 text-center">
+                      <div className="font-bold">Tuesday</div>
+                      <div className="text-2xl font-bold">17</div>
+                      <div className="text-sm">June 2025</div>
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
-            </Tabs>
+
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="rounded bg-green-600 p-2 text-sm text-white">Recent Activity</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {recentActivities.slice(0, 3).map((activity, index) => (
+                      <div key={index} className="text-xs">
+                        <div className="font-medium text-gray-900">{activity.user}</div>
+                        <div className="text-gray-600">{activity.action}</div>
+                        <div className="text-gray-500">{activity.time}</div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="rounded bg-orange-600 p-2 text-sm text-white">Upcoming Tasks</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {upcomingTasks.slice(0, 3).map((task, index) => (
+                      <div key={index} className="text-xs">
+                        <div className="flex items-center justify-between">
+                          <div className="font-medium text-gray-900">{task.task}</div>
+                          <Badge className={getPriorityColor(task.priority)}>{task.priority}</Badge>
+                        </div>
+                        <div className="text-gray-500">Due: {task.due}</div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
-
-          {/* Right Sidebar - Better mobile layout */}
-          <div className="w-full lg:w-80 xl:w-96 p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 bg-gray-50 lg:bg-white border-t lg:border-t-0 lg:border-l border-gray-200">
-            <Card>
-              <CardHeader className="pb-2 sm:pb-3">
-                <CardTitle className="text-xs sm:text-sm bg-blue-600 text-white p-2 rounded flex items-center justify-between">
-                  Issue Tracking
-                  <Badge className="bg-white text-blue-600 text-xs">5</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-1 sm:space-y-2">
-                <Button variant="link" className="text-xs sm:text-sm text-blue-600 p-0 h-auto justify-start">
-                  New Issue
-                </Button>
-                <Button variant="link" className="text-xs sm:text-sm text-blue-600 p-0 h-auto justify-start">
-                  My Issues (3)
-                </Button>
-                <Button variant="link" className="text-xs sm:text-sm text-blue-600 p-0 h-auto justify-start">
-                  Urgent Issues (2)
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm bg-blue-600 text-white p-2 rounded flex items-center justify-between">
-                  SComm
-                  <Badge className="bg-white text-blue-600">12</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Inbox (8)
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Sent Items
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Compose
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Drafts (2)
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Custom User Group
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Message Audit
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm bg-blue-600 text-white p-2 rounded">Appointments</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Today (3)
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Weekly (14)
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Monthly (45)
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm bg-blue-600 text-white p-2 rounded">Schedule</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  View Schedule
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Print Schedule
-                </Button>
-                <Button variant="link" className="text-sm text-blue-600 p-0 h-auto justify-start">
-                  Search
-                </Button>
-                <div className="bg-yellow-400 text-center py-3 px-4 rounded mt-4">
-                  <div className="font-bold">Tuesday</div>
-                  <div className="text-2xl font-bold">17</div>
-                  <div className="text-sm">June 2025</div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm bg-green-600 text-white p-2 rounded">Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {recentActivities.slice(0, 3).map((activity, index) => (
-                  <div key={index} className="text-xs">
-                    <div className="font-medium text-gray-900">{activity.user}</div>
-                    <div className="text-gray-600">{activity.action}</div>
-                    <div className="text-gray-500">{activity.time}</div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm bg-orange-600 text-white p-2 rounded">Upcoming Tasks</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {upcomingTasks.slice(0, 3).map((task, index) => (
-                  <div key={index} className="text-xs">
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium text-gray-900">{task.task}</div>
-                      <Badge className={getPriorityColor(task.priority)}>{task.priority}</Badge>
-                    </div>
-                    <div className="text-gray-500">Due: {task.due}</div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   )
